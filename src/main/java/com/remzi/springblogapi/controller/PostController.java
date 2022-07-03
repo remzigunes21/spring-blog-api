@@ -49,12 +49,12 @@ public class PostController {
         return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
-    @GetMapping(value = "/api/posts/{id}", headers = "X-API-VERSION=1")
+    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.javaguides.v1+json")
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping(value = "/api/posts/{id}", headers = "X-API-VERSION=2")
+    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.javaguides.v2+json")
     public ResponseEntity<PostDToV2> getPostByIdV2(@PathVariable(name = "id") long id) {
         PostDto postDto = postService.getPostById(id);
 
