@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -29,7 +30,7 @@ import com.remzi.springblogapi.security.JwtAuthenticationFilter;
 public class SecurityConfig {
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
@@ -45,32 +46,74 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                .antMatchers("/api/auth/**").permitAll().anyRequest()
-                .authenticated();
-
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests((authorize) -> authorize
+                        .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .antMatchers("/api/auth/**").permitAll()
+                        // .antMatchers("/v2/api-docs/**").permitAll()
+                        // .antMatchers("/swagger-ui/**").permitAll()
+                        // .antMatchers("/swagger-resources/**").permitAll()
+                        // .antMatchers("/swagger-ui.html").permitAll()
+                        // .antMatchers("/webjars/**").permitAll()
+                        .anyRequest()
+                        .authenticated());
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
+    // @Override
+    // protected void configure(HttpSecurity http) throws Exception {
+    // http
+    // .csrf().disable()
+    // .exceptionHandling()
+    // .authenticationEntryPoint(authenticationEntryPoint)
+    // .and()
+    // .sessionManagement()
+    // .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    // .and()
+    // .authorizeRequests()
+    // .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+    // .antMatchers("/api/v1/auth/**").permitAll()
+    // .antMatchers("/v2/api-docs/**").permitAll()
+    // .antMatchers("/swagger-ui/**").permitAll()
+    // .antMatchers("/swagger-resources/**").permitAll()
+    // .antMatchers("/swagger-ui.html").permitAll()
+    // .antMatchers("/webjars/**").permitAll()
+    // .anyRequest()
+    // .authenticated();
+    // http.addFilterBefore(jwtAuthenticationFilter(),
+    // UsernamePasswordAuthenticationFilter.class);
+    // }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // @Override
     // @Bean
-    // public InMemoryUserDetailsManager userDetailsService() {
-    // UserDetails user =
-    // User.builder().username("remzi").password(passwordEncoder().encode("gunes")).roles("USER")
-    // .build();
+    // public AuthenticationManager authenticationManagerBean() throws Exception {
+    // return super.authenticationManagerBean();
+    // }
+
+    // @Override
+    // @Bean
+    // protected UserDetailsService userDetailsService() {
+    // UserDetails ramesh =
+    // User.builder().username("ramesh").password(passwordEncoder()
+    // .encode("password")).roles("USER").build();
     // UserDetails admin =
-    // User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
-    // .build();
-    // return new InMemoryUserDetailsManager(user, admin);
+    // User.builder().username("admin").password(passwordEncoder()
+    // .encode("admin")).roles("ADMIN").build();
+    // return new InMemoryUserDetailsManager(ramesh, admin);
     // }
 }
