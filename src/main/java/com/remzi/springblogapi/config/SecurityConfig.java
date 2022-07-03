@@ -34,7 +34,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/api/**").permitAll().anyRequest()
+        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers("/api/auth/**").permitAll().anyRequest()
                 .authenticated().and().httpBasic();
         return http.build();
     }
@@ -45,12 +46,14 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.builder().username("remzi").password(passwordEncoder().encode("gunes")).roles("USER")
-                .build();
-        UserDetails admin = User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+    // @Bean
+    // public InMemoryUserDetailsManager userDetailsService() {
+    // UserDetails user =
+    // User.builder().username("remzi").password(passwordEncoder().encode("gunes")).roles("USER")
+    // .build();
+    // UserDetails admin =
+    // User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
+    // .build();
+    // return new InMemoryUserDetailsManager(user, admin);
+    // }
 }
