@@ -1,4 +1,4 @@
-package com.remzi.springblogapi.config;
+package com.remzi.springblogapi.security;
 
 import java.io.IOException;
 
