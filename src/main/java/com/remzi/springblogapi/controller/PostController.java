@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.remzi.springblogapi.payload.PostDToV2;
 import com.remzi.springblogapi.payload.PostDto;
 import com.remzi.springblogapi.payload.PostResponse;
 import com.remzi.springblogapi.service.PostService;
@@ -49,28 +48,30 @@ public class PostController {
         return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
-    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.javaguides.v1+json")
+    @GetMapping(value = "/api/posts/{id}")
     public ResponseEntity<PostDto> getPostByIdV1(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
-    @GetMapping(value = "/api/posts/{id}", produces = "application/vnd.javaguides.v2+json")
-    public ResponseEntity<PostDToV2> getPostByIdV2(@PathVariable(name = "id") long id) {
-        PostDto postDto = postService.getPostById(id);
+    // @GetMapping(value = "/api/posts/{id}", produces =
+    // "application/vnd.javaguides.v2+json")
+    // public ResponseEntity<PostDToV2> getPostByIdV2(@PathVariable(name = "id")
+    // long id) {
+    // PostDto postDto = postService.getPostById(id);
 
-        PostDToV2 postDToV2 = new PostDToV2();
-        postDToV2.setId(postDto.getId());
-        postDToV2.setContent(postDto.getContent());
-        postDToV2.setDescription(postDto.getDescription());
-        postDToV2.setTitle(postDto.getTitle());
+    // PostDToV2 postDToV2 = new PostDToV2();
+    // postDToV2.setId(postDto.getId());
+    // postDToV2.setContent(postDto.getContent());
+    // postDToV2.setDescription(postDto.getDescription());
+    // postDToV2.setTitle(postDto.getTitle());
 
-        List<String> tags = new ArrayList<>();
-        tags.add("Java");
-        tags.add("Spring Boot");
-        tags.add("AWS");
-        postDToV2.setTags(tags);
-        return ResponseEntity.ok(postDToV2);
-    }
+    // List<String> tags = new ArrayList<>();
+    // tags.add("Java");
+    // tags.add("Spring Boot");
+    // tags.add("AWS");
+    // postDToV2.setTags(tags);
+    // return ResponseEntity.ok(postDToV2);
+    // }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/v1/posts/update/{id}")
