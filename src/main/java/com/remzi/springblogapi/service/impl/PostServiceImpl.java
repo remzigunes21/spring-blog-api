@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -125,6 +127,12 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
         postRepository.delete(post);
 
+    }
+
+    @Override
+    public List<PostDto> createPostAll(@Valid List<PostDto> postDto) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     // @Override
